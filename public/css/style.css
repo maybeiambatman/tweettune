@@ -1,0 +1,102 @@
+.tweet-box-stream
+{
+	height: 100px;
+	width: 1200px;
+	float: left;
+	margin: 5px;
+}
+
+.tweet-box 
+{
+	height: 100px;
+	width: 200px;
+	float: left;
+	/*border-radius: .7em;*/
+	padding: 10px;
+	margin: 5px;
+	background-color: #323232;
+}
+
+.tweet-box-positive { border-left: 5px solid #21B075; }
+.tweet-box-neutral { border-left: 5px solid #F0EB67; }
+.tweet-box-negative { border-left: 5px solid #D64040; }
+
+
+.tweet-box-content
+{
+	color: white;
+	font-size: 12px;
+	margin: auto;
+	margin-left: 47px;
+	text-align: center;
+}
+.dark-background
+{
+	background-color: #323232;
+}
+
+.title-text
+{
+	color: rgb(79, 218, 206);
+	/*color: white;*/
+	font-size: 60px;
+	text-align: center;
+}
+
+.twitter-box-pic
+{
+	height: 40px;
+	width: 40px;
+	float: left;
+	padding-right: 5px;
+}
+
+.description-text
+{
+	color: white;
+	font-size: 14px;
+	text-align: center;
+}
+
+.credit-text
+{
+	color: white;
+	font-size: 14px;
+	text-align: center;
+}
+
+.hashtag-input
+{
+	width: 300px;
+	margin: auto;
+	padding: 20px;
+	color: rgb(79, 218, 206);
+}
+
+input[type=text]{
+	height: 45px;
+	border:1px solid #2a2e31;
+	background-color:#2d3035;
+	color:#505358;
+	font-size: 14px;
+}
+
+input[type=text]:focus{
+	border:1px solid rgb(79, 218, 206);
+}
+
+.tweet-box-username
+{
+	font-weight: bold;
+	color: white;
+}
+
+.counter-box 
+{
+	height: 120px;
+	width: 100px;
+	background-color: white;
+	padding-left: 0px 20px;
+	float: left;
+	margin: 5px 20px;
+}

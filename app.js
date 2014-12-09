@@ -8,6 +8,7 @@ var API = 'localhost',
     bodyParser = require('body-parser'),
     cookieParser = require('cookie-parser'),
     session = require('express-session'),
+    sentiment = require('sentiment'),
     app = express();
 
 var Twitter = require('node-tweet-stream')
@@ -18,18 +19,17 @@ var Twitter = require('node-tweet-stream')
     token_secret: 'amCBzAKFk7ILALGM9haSYnSbI4WmsxcxFZ4bTFMXraSH3'
 })
 
-var arr = []
+// t.on('tweet', function (tweet) {
+//   console.log('tweet received', tweet['text']);
+//   console.log('tweet sentiment', sentiment(tweet['text'])['score']);
+//   arr.push(tweet['text']);
+// })
 
-t.on('tweet', function (tweet) {
-  console.log('tweet received', tweet['text'])
-  arr.push(tweet);
-})
+// t.on('error', function (err) {
+//   console.log('Oh no')
+// })
 
-t.on('error', function (err) {
-  console.log('Oh no')
-})
-
-t.track('bulls');
+// t.track('#PlayStationExperience');
 
 // Deploy config
 app.listen(process.env.PORT || 3000);
@@ -62,8 +62,34 @@ app.set('view options', {
 
 // respond with "Hello World!" on the homepage
 app.get('/', function (req, res) {
-  res.send(arr);
+  res.header('Content-Type', 'text/event-stream');
+
+  t.track('#funny');
+
+  t.on('tweet', function (tweet) {
+    console.log('tweet received', tweet['text']);
+    console.log('tweet sentiment', sentiment(tweet['text'])['score']);
+    res.write(tweet['text']);
+  })
+
+  // t.on('error', function (err) {
+  //   console.log('Oh no')
+  // })
+
+  // var interval_id = setInterval(function() {
+  //     res.write("some data");
+  // }, 50);
+
+  req.socket.on('close', function() {
+      clearInterval(interval_id);
+  });
 })
+
+app.get('/index', function(req, res) {
+   res.render('index.jade', {
+       title: 'Smiley'
+   });
+});
 
 app.get('/about', function(req, res) {
    res.render('about.jade', {

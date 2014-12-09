@@ -1,0 +1,53 @@
+doctype html
+html
+head
+    script(src='//code.jquery.com/jquery-1.11.0.min.js')
+    |     
+    script(src='//code.jquery.com/jquery-migrate-1.2.1.min.js')
+    |     
+    script(src='/js/jqueryui.js')
+    |     
+    script(src='/js/scripts.js')
+    // Latest compiled and minified CSS
+    link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css')
+    // Optional theme
+    link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css')
+    // Latest compiled and minified JavaScript
+    script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js')
+    |     
+    link(rel='stylesheet', type='text/css', href='/css/style.css')
+    |     
+    title tweetTune
+  body.dark-background
+    .title-text tweetTune
+    |   
+    .description-text Real-time hashtag sentiment analysis displayed as a visual &amp; audio experience
+    | &#x9;
+    .input-group.hashtag-input
+      input.form-control(type='text', placeholder='Enter a hashtag here to analyze!')
+    // <div class="counter-box counter-box-positive"></div>
+    .tweet-box-stream.tweet-box-stream-positive
+    // <div class="counter-box counter-box-neutral"></div>
+    .tweet-box-stream.tweet-box-stream-neutral
+    // <div class="counter-box counter-box-negative"></div>
+    .tweet-box-stream.tweet-box-stream-negative
+    |   &#x9;
+    script.
+      /*
+      setInterval(function(){
+      $('.tweet-box-stream').prepend('<div class="tweet-box"></div>'); },1500);
+      */
+      $(document).ready(function () {
+      var max_tweets = 5;
+      var count_positive = 0;
+      var tweet_array_positive = [];
+      var count_neutral = 0;
+      var tweet_array_neutral = [];
+      var count_negative = 0;
+      var tweet_array_negative = [];
+      console.log("function is running");
+      });
+    //
+      <div class="credit-text">
+      CS 467 Final Project: Emily Tran (etran5@illinois.edu), Faizaan Mahmud (fmahmud2@illinois.edu), Katie Chrzanowski (chrzano1@illinois.edu), Mohd Irteza (irteza1@illinois.edu)
+      </div>
