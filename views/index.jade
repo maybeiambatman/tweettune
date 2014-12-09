@@ -26,6 +26,22 @@ head
     | &#x9;
     .input-group.hashtag-input
       input.form-control(type='text', placeholder='Enter a hashtag here to analyze!')
+    #counters(style='text-align:center; margin-top: 5px; color: white;')
+        span(style='color:#21B075; font-weight: bold;') POSITIVE: 
+          |  
+          span#pos-count 0
+          |  
+          br
+          |  
+          span(style='color: #F0EB67; font-weight: bold;') NEUTRAL: 
+          |  
+          span#neu-count 0
+          |  
+          br
+          span(style='color: #D64040; font-weight: bold;') NEGATIVE: 
+          |  
+          span#neg-count 0
+          span#neg-count
     // <div class="counter-box counter-box-positive"></div>
     .tweet-box-stream.tweet-box-stream-positive
     // <div class="counter-box counter-box-neutral"></div>

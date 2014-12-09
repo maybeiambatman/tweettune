@@ -1,9 +1,13 @@
+#pos-count, #neu-count, #neg-count{
+	color: white;
+}
+
 .tweet-box-stream
 {
 	height: 100px;
 	width: 1200px;
 	float: left;
-	margin: 5px;
+	margin: 2px;
 }
 
 .tweet-box 
@@ -13,7 +17,7 @@
 	float: left;
 	/*border-radius: .7em;*/
 	padding: 10px;
-	margin: 5px;
+	margin: 2px;
 	background-color: #323232;
 }
 
@@ -54,7 +58,7 @@
 .description-text
 {
 	color: white;
-	font-size: 14px;
+	font-size: 12px;
 	text-align: center;
 }
 
@@ -69,7 +73,7 @@
 {
 	width: 300px;
 	margin: auto;
-	padding: 20px;
+	padding: 5px;
 	color: rgb(79, 218, 206);
 }
 

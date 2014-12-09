@@ -12,6 +12,7 @@ var API = 'http://faizaanmahmud.com',
     sentiment = require('sentiment'),
     app = express();
 
+var last_tracked = "";
 var Twitter = require('node-tweet-stream')
     , t = new Twitter({
     consumer_key: 'ypoD0SpeR9wTnBakqYqsGqnLi',
@@ -19,19 +20,6 @@ var Twitter = require('node-tweet-stream')
     token: '2845320649-qYLFU09FUwJ4VMsfjiCqgRCJu120OYVuYCDbVpc',
     token_secret: 'amCBzAKFk7ILALGM9haSYnSbI4WmsxcxFZ4bTFMXraSH3'
 })
-
-// t.track('#omg');
-
-// t.on('tweet', function (tweet) {
-//   console.log(tweet);
-//   console.log('tweet received', tweet['text']);
-//   //console.log('tweet sentiment', sentiment(tweet['text'])['score']);
-//   //res.write('data: irteza'+tweet['screen_name']+'irteza'+tweet['profile_image_url']+'irteza'+tweet['text']+'\n\n');
-// })
-
-// t.on('error', function (err) {
-//   console.log('Oh no')
-// })
 
 // Deploy config
 app.listen(process.env.PORT || 3000);
@@ -65,49 +53,25 @@ app.set('view options', {
 // respond with "Hello World!" on the homepage
 app.get('/stream/:term', function (req, res) {
   res.header('Content-Type', 'text/event-stream');
+  if (last_tracked !== ""){
+    t.untrack(last_tracked);
+  }
 
-  var hashtag = '#'+req.params.term
+  var hashtag = '#'+req.params.term;
+  last_tracked = hashtag;
   console.log(hashtag);
   t.track(hashtag);
 
   t.on('tweet', function (tweet) {
-    // console.log('tweet received', tweet['text']);
-    // console.log('tweet sentiment', sentiment(tweet['text'])['score']);
-    // var tweet_body = tweet['text'];
-    // var senti_body = tweet_body.replace(" ", "_");
-    // senti_body = senti_body.replace("#", "");
-    // senti_body = senti_body.replace("?", "__question__");
-    // senti_body = senti_body.replace("$", "");
-    // senti_body = senti_body.replace(".", "");
-    // senti_body = senti_body.replace(";", "");
-    // senti_body = senti_body.replace("\n", "__new_line__");
     var score = sentiment(tweet['text'])['score'];
-
-    // var options = {
-    //   host: 'faizaanmahmud.com',
-    //   port: 8000,
-    //   path: '/tweet/?item='+senti_body
-    // };
-
-    // http.get(options, function(resp){
-    //   resp.on('data', function(chunk){
-    //     // console.log(chunk);
-    //     // score = float(chunk);
-    //   });
-    // }).on("error", function(e){
-    //   console.log("Got error: " + e.message);
-    // });
-    console.log('data: irteza'+score+'irteza'+tweet['user']['screen_name']+'irteza'+tweet['user']['profile_image_url']+'irteza'+tweet['text']+'\n\n')
-    res.write('data: irteza'+score+'irteza'+tweet['user']['screen_name']+'irteza'+tweet['user']['profile_image_url']+'irteza'+tweet['text']+'\n\n');
+    var space_place_holder = '__space__';
+    console.log('data: '+space_place_holder+score+space_place_holder+tweet['user']['screen_name']+space_place_holder+tweet['user']['profile_image_url']+space_place_holder+tweet['text']+'\n\n')
+    res.write('data: '+space_place_holder+score+space_place_holder+tweet['user']['screen_name']+space_place_holder+tweet['user']['profile_image_url']+space_place_holder+tweet['text']+'\n\n');
   })
 
   t.on('error', function (err) {
     console.log('Oh no')
   })
-
-  // var interval_id = setInterval(function() {
-  //     res.write("some data");
-  // }, 50);
 
   req.socket.on('close', function() {
       t.untrack(req.params.term);
@@ -116,12 +80,17 @@ app.get('/stream/:term', function (req, res) {
 
 app.get('/index', function(req, res) {
    res.render('index.jade', {
-       title: 'Smiley'
+       title: 'TweetTune'
    });
 });
 
 app.get('/about', function(req, res) {
    res.render('about.jade', {
-       title: 'Smiley'
+       title: 'TweetTune'
    });
+});
+
+process.on('SIGINT', function() {
+    console.log("Caught interrupt signal");
+    process.exit();
 });

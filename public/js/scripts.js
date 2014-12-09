@@ -1,13 +1,12 @@
 $(document).ready(function () {
-	// function search(ele) {
-	//     if(event.keyCode == 13) {
-	//         runTweets(ele.value);        
-	//     }
-	// }
 	$("input").on("keydown",function search(e) {
 	    if(e.keyCode == 13) {
-	    	var key = $(this).val()
-	    	key = key.replace("#", "")
+	    	var key = $(this).val();
+	    	key = key.replace("#", "");
+	    	$("#pos-count").text(0);
+	    	$("#neu-count").text(0);
+	    	$("#neg-count").text(0);
+	    	$('.tweet-box-stream').empty();
 	        // console.log(key);
 	        runTweets(key);
 	    }
@@ -26,6 +25,10 @@ function prependEmptyBox(tweet_box_stream, tweet_box_id,counter){
 function runTweets(key) {
 	    var max_tweets = 6;
 
+	    var tot_pos = 0;
+	    var tot_neu = 0;
+	    var tot_neg = 0;
+
 	    var count_positive = 0; 
 	    var tweet_array_positive = [];
 
@@ -41,21 +44,14 @@ function runTweets(key) {
         var neutral_sound = new Howl({urls: ['/sounds/medium.mp3']})
         var negative_sound = new Howl({urls: ['/sounds/low.mp3']})
 
+        // if (source !== null){
+        // 	source.close();
+        // }
 	   	var source = new EventSource('/stream/'+key);
-	   	// console.log('/stream/'+key);
 	   	  var split_dat = 0;
 		  source.addEventListener('message', function(e) {
 		    var dat = String(e.data);
-		    split_dat = dat.split("irteza");
-		    console.log(split_dat[1]);
-		    console.log(split_dat[2]);
-		    console.log(split_dat[3]);
-		    console.log(split_dat[4]);
-		 //    prependTweet('tweet-box-stream-positive', 'tweet-box-positive', count_positive, split_dat[2], split_dat[3], split_dat[4]);
-			// prependEmptyBox('tweet-box-stream-neutral', 'tweet-box-neutral', count_neutral);
-			// prependEmptyBox('tweet-box-stream-negative', 'tweet-box-negative', count_negative);
-			// positive_sound.play();
-
+		    split_dat = dat.split("__space__");
 
 		var score = parseFloat(split_dat[1]);
 		var case_num = 0;
@@ -72,24 +68,33 @@ function runTweets(key) {
 			case_num = 3;
 		}
 		console.log("caase num = "+case_num.toString());
+		positive_sound.stop();
+		neutral_sound.stop();
+		negative_sound.stop();
 		switch(case_num) {
     		case 1:
 	    		prependTweet('tweet-box-stream-positive', 'tweet-box-positive', count_positive, split_dat[2], split_dat[3], split_dat[4]);
 				prependEmptyBox('tweet-box-stream-neutral', 'tweet-box-neutral', count_neutral);
 				prependEmptyBox('tweet-box-stream-negative', 'tweet-box-negative', count_negative);
 			    positive_sound.play();
+			    tot_pos++;
+			    $("#pos-count").text(tot_pos);
 			    break;
 		    case 2: 
 	    		prependTweet('tweet-box-stream-neutral', 'tweet-box-neutral', count_neutral, split_dat[2], split_dat[3], split_dat[4]);
 				prependEmptyBox('tweet-box-stream-positive', 'tweet-box-positive', count_positive);
 				prependEmptyBox('tweet-box-stream-negative', 'tweet-box-negative', count_negative);
 			    neutral_sound.play();
+			    tot_neu++;
+			    $("#neu-count").text(tot_neu);
 		    	break; 
-		    case 3: 
+		    case 3:
 	    		prependTweet('tweet-box-stream-negative', 'tweet-box-negative', count_negative, split_dat[2], split_dat[3], split_dat[4]);
 				prependEmptyBox('tweet-box-stream-positive', 'tweet-box-positive', count_positive);
 				prependEmptyBox('tweet-box-stream-neutral', 'tweet-box-neutral', count_neutral);
 			    negative_sound.play();
+			    tot_neg++;
+			    $("#neg-count").text(tot_neg);
 			    break;
 		    default:
 		    	// console.log('default');
@@ -118,7 +123,6 @@ function runTweets(key) {
 		    	remove_me = tweet_array_negative.shift();
 				$("#" + remove_me).remove();
 
-
 		    	if(count_positive > max_tweets) 
 	    		{
 	    			count_positive = 0;
@@ -127,5 +131,9 @@ function runTweets(key) {
 	    		}
 		    	
 		    }
-	  }, false);
+	  	}, false);
+		source.addEventListener('error', function (e) {
+		    console.log('error');
+		    source.close();
+		}, false);
 }
