@@ -1,5 +1,6 @@
 // App constants
-var API = 'localhost',
+var API = 'http://faizaanmahmud.com',
+    API_PORT = '8000'
     // Required constants
     express = require('express'),
     stylus = require('stylus'),
@@ -19,17 +20,18 @@ var Twitter = require('node-tweet-stream')
     token_secret: 'amCBzAKFk7ILALGM9haSYnSbI4WmsxcxFZ4bTFMXraSH3'
 })
 
+// t.track('#omg');
+
 // t.on('tweet', function (tweet) {
+//   console.log(tweet);
 //   console.log('tweet received', tweet['text']);
-//   console.log('tweet sentiment', sentiment(tweet['text'])['score']);
-//   arr.push(tweet['text']);
+//   //console.log('tweet sentiment', sentiment(tweet['text'])['score']);
+//   //res.write('data: irteza'+tweet['screen_name']+'irteza'+tweet['profile_image_url']+'irteza'+tweet['text']+'\n\n');
 // })
 
 // t.on('error', function (err) {
 //   console.log('Oh no')
 // })
-
-// t.track('#PlayStationExperience');
 
 // Deploy config
 app.listen(process.env.PORT || 3000);
@@ -61,27 +63,75 @@ app.set('view options', {
 });
 
 // respond with "Hello World!" on the homepage
-app.get('/', function (req, res) {
+app.get('/stream', function (req, res) {
   res.header('Content-Type', 'text/event-stream');
 
-  t.track('#funny');
+  t.track('#omg');
 
   t.on('tweet', function (tweet) {
-    console.log('tweet received', tweet['text']);
-    console.log('tweet sentiment', sentiment(tweet['text'])['score']);
-    res.write(tweet['text']);
+    // console.log('tweet received', tweet['text']);
+    // console.log('tweet sentiment', sentiment(tweet['text'])['score']);
+    var tweet_body = tweet['text'];
+    var senti_body = tweet_body.replace(" ", "_");
+    senti_body = senti_body.replace("#", "");
+    senti_body = senti_body.replace("?", "__question__");
+    senti_body = senti_body.replace("$", "");
+    senti_body = senti_body.replace(".", "");
+    senti_body = senti_body.replace(";", "");
+    senti_body = senti_body.replace("\n", "__new_line__");
+    var score = 0.0;
+
+    var options = {
+      host: 'faizaanmahmud.com',
+      port: 8000,
+      path: '/tweet/?item='+senti_body
+    };
+
+    http.get(options, function(resp){
+      resp.on('data', function(chunk){
+        // console.log(chunk);
+        // score = float(chunk);
+      });
+    }).on("error", function(e){
+      console.log("Got error: " + e.message);
+    });
+
+    // var options = {
+    //   host: API,
+    //   path: '/tweet/?item='+senti_body,
+    //   port: API_PORT,
+    //   method: 'GET'
+    // };
+    // callback = function(response) {
+    //     var str = '';
+    //     //another chunk of data has been recieved, so append it to `str`
+    //     response.on('data', function (chunk) {
+    //         str += chunk;
+    //     });
+    //     //the whole response has been recieved, so we just print it out here
+    //     response.on('end', function () {
+    //         console.log(str);
+    //         score = float(str);
+    //     });
+    // }
+    // var request = http.request(options, callback);
+    // request.on('error', function(err) {
+    //     console.log(err);
+    // });
+    // request.end();
+    res.write('data: irteza'+score+'irteza'+tweet['user']['screen_name']+'irteza'+tweet['user']['profile_image_url']+'irteza'+tweet['text']+'\n\n');
   })
 
-  // t.on('error', function (err) {
-  //   console.log('Oh no')
-  // })
+  t.on('error', function (err) {
+    console.log('Oh no')
+  })
 
   // var interval_id = setInterval(function() {
   //     res.write("some data");
   // }, 50);
 
   req.socket.on('close', function() {
-      clearInterval(interval_id);
+      t.untrack('#omg');
   });
 })
 
