@@ -105,7 +105,7 @@ function runTweets(key) {
 			tweet_array_neutral.push("tweet-box-neutral-"+count_neutral);
 			tweet_array_negative.push("tweet-box-negative-"+count_negative);
 
-			$('.tweet-box-stream').effect("slide", { direction: "left", distance: "210px" }, 1900);
+			$('.tweet-box-stream').effect("slide", { direction: "left", distance: "210px" }, 200);
 
 			count_positive++;
 			count_neutral++;
